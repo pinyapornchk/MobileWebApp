@@ -1,0 +1,28 @@
+.home{
+  background-color:rgb(253,224,229);
+}
+
+#branding{
+  background: url(image/logo.jpg) no-repeat;
+  background-size: 100% 165px;
+  /* width: 322px; */
+  height: 140px;
+  text-indent: -999px;
+  font-size: 0px;
+  margin: -10px auto 0 auto;
+}
+
+#searchbranding {
+  background:url(image/search.jpg) no-repeat;
+  background-size: 100% 165px;
+  height: 111px;
+margin-top: -70px;
+}
+
+#detailbranding {
+  background:url(image/detail.jpg) no-repeat;
+  background-size: 100% 165px;
+  height: 111px;
+margin-top: -40px;
+border-width: 0px
+}

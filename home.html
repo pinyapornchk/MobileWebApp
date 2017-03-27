@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="custom.css">
+</head>
+
+<body>
+
+    <div data-role="page" data-theme="b" id="splash" style="background-color: #fff;">
+        <div class="splash"></div>
+    </div>
+
+    <div id="ajax" data-role="page" class="home">
+
+        <div id="branding">
+            <h1>Movies Lover</h1>
+        </div>
+
+        <div data-role="content" class="choice_list">
+            <div id="searchbranding">
+
+            </div>
+
+            <input type="search" name="keyword" id="search" value="" placeholder="Enter movie title">
+            <input type="button" onclick="searchItems($('#search').val())" data-theme="b" data-icon="search" data-iconshadow="true" value="Search">
+
+            <ul data-role="listview" data-inset="true" id="result">
+
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var globalID;
+
+        $(function() {
+            console.log('setTimeout');
+            setTimeout(hideSplash, 2000);
+        });
+
+        function hideSplash() {
+            $.mobile.changePage("#ajax", "fade");
+        }
+
+        function searchItems(keyword) {
+            console.log(keyword);
+            $.getJSON('http://www.omdbapi.com/?s=' + keyword, function(data) {
+                $('#result').empty();
+                $.each(data.Search, function(index, element) {
+                    var url = "#detail";
+                    var listitem = '<li id="'+element.imdbID+'"><a href="' + url + '"><img src="'+element.Poster+'">' + element.Title + '</a></li>';
+                    $('#result').append(listitem);
+                    $('#result').listview('refresh');
+                });
+            });
+        }
+    </script>
+
+    <div id="detail" data-role="page" class="home">
+
+        <div data-role="header" id="detailbranding">
+            <a href="#" data-rel="back" class="ui-btn ui-btn-b ui-icon-back ui-btn-icon-left" style="margin-top: 55px;">Back</a>
+        </div>
+
+        <div data-role="main" class="ui-content">
+          <center>
+            <img src="" id="Poster">
+            <table>
+              <tr>
+                <td>Title</td>
+                <td id="Title"></td>
+              </tr>
+              <tr>
+                <td>Year</td>
+                <td id="Year"></td>
+              </tr>
+              <tr>
+                <td>Type</td>
+                <td id="Type"></td>
+              </tr>
+            </table>
+          </center>
+        </div>
+    </div>
+        <script type="text/javascript">
+          $('#result').on('click', 'li', function() {
+             globalID = this.id;
+          });
+
+          $(document).on("pageshow", "#detail", function() {
+               getItem(globalID);
+           });
+
+            function getItem(id) {
+
+                $.getJSON('http://www.omdbapi.com/?i=' + id, function(data) {
+                    $('#result').empty();
+                    $('#Poster').attr("src",data.Poster).show();
+                    $('#Title').text(data.Title).show();
+                    $('#Year').text(data.Year).show();
+                    $('#Type').text(data.Type).show();
+
+                    console.log();
+                });
+            }
+
+            function GetQueryStringParams(sParam) {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&');
+                for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                        return sParameterName[1];
+                    }
+                }
+            }
+        </script>
+</body>
+
+</html>
